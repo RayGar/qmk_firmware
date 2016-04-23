@@ -15,27 +15,31 @@
 void init_backlight_pin(void) {
     print("init_backlight_pin()\n");
     // Set our LED pins as output
-    DDRD |= (1<<6); // Esc
+//    DDRD |= (1<<6); // Esc
     DDRB |= (1<<7); // Page Up
     DDRD |= (1<<4); // Arrows
+    DDRB |= (1<<4); // Capslock
 
     // Set our LED pins low
-    PORTD &= ~(1<<6); // Esc
+ //   PORTD &= ~(1<<6); // Esc
     PORTB &= ~(1<<7); // Page Up
     PORTD &= ~(1<<4); // Arrows
+    PORTB &= ~(1<<4); // Capslock
 }
 
 void backlight_set(uint8_t level) {
     if ( level == 0 ) {
         // Turn off light
-        PORTD |= (1<<6); // Esc
+//        PORTD |= (1<<6); // Esc
         PORTB |= (1<<7); // Page Up
         PORTD |= (1<<4); // Arrows
+        PORTB |= (1<<4); // capslock
     } else {
         // Turn on light
-        PORTD &= ~(1<<6); // Esc
+//        PORTD &= ~(1<<6); // Esc
         PORTB &= ~(1<<7); // Page Up
         PORTD &= ~(1<<4); // Arrows
+        PORTB &= ~(1<<4); // Capslock
     }
 }
 
