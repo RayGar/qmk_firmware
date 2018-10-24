@@ -129,6 +129,13 @@ typedef struct
   USB_Descriptor_Endpoint_t                CDC_DataOutEndpoint;
   USB_Descriptor_Endpoint_t                CDC_DataInEndpoint;
 #endif
+
+#ifdef JOYSTICK_ENABLE
+    // Joystick HID Interface
+    USB_Descriptor_Interface_t            Joystick_Interface;
+    USB_HID_Descriptor_HID_t              Joystick_HID;
+    USB_Descriptor_Endpoint_t             Joystick_INEndpoint;
+#endif
 } USB_Descriptor_Configuration_t;
 
 
@@ -182,8 +189,14 @@ typedef struct
 #   define CDI_INTERFACE         AS_INTERFACE
 #endif
 
-/* nubmer of interfaces */
-#define TOTAL_INTERFACES            (CDI_INTERFACE + 1)
+#ifdef JOYSTICK_ENABLE
+#   define JOYSTICK_INTERFACE          (CDI_INTERFACE + 1)
+#else
+#   define JOYSTICK_INTERFACE          CDI_INTERFACE
+#endif
+
+/* number of interfaces */
+#define TOTAL_INTERFACES            (JOYSTICK_INTERFACE + 1)
 
 
 // Endopoint number and size
@@ -249,6 +262,12 @@ typedef struct
 #   define CDC_OUT_EPNUM  MIDI_STREAM_OUT_EPNUM
 #endif
 
+#ifdef JOYSTICK_ENABLE
+#   define JOYSTICK_IN_EPNUM           (CDC_OUT_EPNUM + 1)
+#else
+#   define JOYSTICK_IN_EPNUM           CDC_OUT_EPNUM
+#endif
+
 #if (defined(PROTOCOL_LUFA) && CDC_OUT_EPNUM > (ENDPOINT_TOTAL_ENDPOINTS - 1)) || \
   (defined(PROTOCOL_CHIBIOS) && CDC_OUT_EPNUM > USB_MAX_ENDPOINTS)
 # error "There are not enough available endpoints to support all functions. Remove some in the rules.mk file.(MOUSEKEY, EXTRAKEY, CONSOLE, NKRO, MIDI, SERIAL, STENO)"
@@ -263,6 +282,7 @@ typedef struct
 #define MIDI_STREAM_EPSIZE          64
 #define CDC_NOTIFICATION_EPSIZE     8
 #define CDC_EPSIZE                  16
+#define JOYSTICK_EPSIZE             8
 
 uint16_t get_usb_descriptor(const uint16_t wValue,
                             const uint16_t wIndex,
